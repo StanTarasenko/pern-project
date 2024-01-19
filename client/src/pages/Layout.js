@@ -2,7 +2,7 @@
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { ADMIN_ROUTE, LOGIN_ROUTE, SHOP_ROUTE } from '../utils/constants';
-import { selectIsAuth, setIsAuth } from '../features/userSlice';
+import { selectIsAuth, setIsAuth, setUser } from '../features/userSlice';
 
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
@@ -16,6 +16,9 @@ const Layout = () => {
 
   const logOut = () => {
     dispatch(setIsAuth(false));
+    dispatch(setUser({}));
+    localStorage.setItem('token', '');
+    navigate(LOGIN_ROUTE);
 }
 
    return (
@@ -51,6 +54,7 @@ const Layout = () => {
                         <Button
                           variant={"outline-light"}
                           onClick={() => navigate(ADMIN_ROUTE)}
+                          style={{ marginRight: "15px" }}
                         >
                           Admin panel
                         </Button>

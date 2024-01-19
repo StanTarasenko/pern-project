@@ -1,14 +1,14 @@
 // Modules
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+
+// Utils
+import { $host } from '../http';
 
 export const getBrands = createAsyncThunk(
   "brandList/getBrands", 
   async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:5000/api/brand"
-      );
+      const response = await $host.get(`api/brand`);
       return response.data;
     } catch (error) {
       console.error(error);
@@ -21,8 +21,16 @@ export const brandSlice = createSlice({
     brandList: [],
     status: 'idle',
     error: null,
+    brandId: 0,
   },
-  reducers: {},
+  reducers: {
+    setBrandId: (state, action) => {
+      state.brandId = action.payload;
+    },
+    setBrands: (state, action) => {
+      state.brandList = action.payload;
+    }
+  },
   extraReducers: (builder) => {
     builder
         .addCase(getBrands.pending, (state) => {
@@ -39,6 +47,9 @@ export const brandSlice = createSlice({
     },
 });
 
+export const { setBrandId, setBrands } = brandSlice.actions;
+
+export const selectBrandId = (state) => state.brand.brandId;
 export const selectBrandList = (state) => state.brand.brandList;
 export const selectBrandStatus = (state) => state.brand.status;
 export const selectBrandError = (state) => state.brand.error;
