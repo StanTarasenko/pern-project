@@ -5,6 +5,7 @@ import { useLocation } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Spinner from 'react-bootstrap/Spinner';
 
 // Assets
 import star from '../../assets/star.svg';
@@ -12,10 +13,9 @@ import star from '../../assets/star.svg';
 // Features
 import {
   getDeviceById, 
-  selectDeviceById, 
+  selectDeviceById,
   selectDeviceByIdStatus,
 } from '../../features/deviceSlice';
-import { $host } from '../../http';
 
 const DevicePage = () => {
   const dispatch = useDispatch();
@@ -24,11 +24,9 @@ const DevicePage = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    if (deviceStatus === 'idle') {
-      const currentId = pathname.slice(-1);
-      dispatch(getDeviceById(Number(currentId)));
-    }
-  }, [deviceStatus, dispatch, pathname]);
+    const currentId = pathname.slice(-1);
+    dispatch(getDeviceById(Number(currentId)));
+  }, [dispatch, pathname]);
 
   return (
     <div style={{  
@@ -38,17 +36,20 @@ const DevicePage = () => {
     >
       <Container style={{ marginTop: "50px" }}>
         <Row>
-          {device.img && 
-          <Col md={4}>
+          {device.img && deviceStatus === 'succeeded' 
+          ? <Col md={4}>
             <img 
               alt="img" 
-              src={`${$host}${device.img}`} 
+              src={`http://localhost:5000/${device.img}`} 
               style={{ 
                 width: "300px", 
                 height: "350px"
-              }}
-            />
-          </Col>}
+                }}
+              />
+            </Col> 
+          : <Col md={4}>
+              <Spinner animation="border" variant="info" />
+            </Col>}
           <Col md={4}>
             <h2>{device.name}</h2>
             <div style={{ 
@@ -82,6 +83,12 @@ const DevicePage = () => {
             Etiam rutrum ex non libero ullamcorper scelerisque ac eu sapien. 
             Phasellus vitae tellus luctus, dictum risus sed, tempus elit. Nam dolor erat, 
             tempor et turpis quis, convallis fringilla nisl.
+            <hr/>
+            {device.info && device.info.map((item) => <Col key={item.id}>
+              <h5>
+                {item.title}: {item.description}
+              </h5>
+            </Col>)}
           </Col>
         </Row>
       </Container>

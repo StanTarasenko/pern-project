@@ -17,14 +17,18 @@ const App = () => {
   const token = localStorage.getItem('token');
   const user = useSelector(selectUser);
   const decoded = token ? jwtDecode(token) : '';
-  console.log(user);
 
   useEffect(() => {
     if (decoded) {
       dispatch(setUser(decoded));
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (user.role === 'ADMIN') {
       dispatch(setIsAuth(true));
     }
-  }, []);
+  }, [user]);
 
   return (
     <div className="App">

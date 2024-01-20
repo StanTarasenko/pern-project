@@ -2,13 +2,24 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 // Utils
-import { $host } from '../http';
+import { $authHost, $host } from '../http';
 
 export const getTypes = createAsyncThunk(
   "typeList/getTypes", 
   async () => {
     try {
       const response = await $host.get(`api/type`);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+});
+
+export const deleteType = createAsyncThunk(
+  "types/deleteType", 
+  async (typeId) => {
+    try {
+      const response = await $authHost.delete(`api/type/${typeId}`);
       return response.data;
     } catch (error) {
       console.error(error);
@@ -22,7 +33,10 @@ export const typeSlice = createSlice({
     status: 'idle',
     error: null,
     typeId: 0,
+    removeStatus: 'idle',
+    removeError: null,
   },
+
   reducers: {
     setTypeId: (state, action) => {
       state.typeId = action.payload;
@@ -31,6 +45,7 @@ export const typeSlice = createSlice({
       state.typeList = action.payload;
     },
   },
+
   extraReducers: (builder) => {
     builder
         .addCase(getTypes.pending, (state) => {
@@ -44,6 +59,18 @@ export const typeSlice = createSlice({
         state.status = 'failed';
         state.error = action.error.message;
       });
+
+    builder
+      .addCase(deleteType.pending, (state) => {
+        state.removeStatus = 'loading';
+      })
+      .addCase(deleteType.fulfilled, (state) => {
+        state.removeStatus = 'succeeded';
+      })
+      .addCase(deleteType.rejected, (state, action) => {
+        state.removeStatus = 'failed';
+        state.removeError = action.error.message;
+      });  
   },
 });
 
@@ -53,5 +80,7 @@ export const selectTypeId = (state) => state.type.typeId;
 export const selectTypeList = (state) => state.type.typeList;
 export const selectTypeStatus = (state) => state.type.status;
 export const selectTypeError = (state) => state.type.error;
+export const selectRemoveTypeStatus = (state) => state.type.removeStatus;
+export const selectRemoveTypeError = (state) => state.type.removeError;
 
 export default typeSlice.reducer;

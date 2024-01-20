@@ -2,7 +2,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 // Utils
-import { $host } from '../http';
+import { $authHost, $host } from '../http';
 
 export const getDevices = createAsyncThunk(
   "deviceList/getDevices", 
@@ -28,6 +28,17 @@ export const getDeviceById = createAsyncThunk(
     }
 });
 
+export const deleteDeviceById = createAsyncThunk(
+  "deleteDevice/deleteDeviceById", 
+  async (deviceId) => {
+    try {
+      const response = await $authHost.delete(`api/device/${deviceId}`);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+});
+
 export const deviceSlice = createSlice({
   name: 'device',
   initialState: {
@@ -39,7 +50,9 @@ export const deviceSlice = createSlice({
     errorById: null,
     page: 1,
     totalCount: 0,
-    pageLimit: 0
+    pageLimit: 0,
+    deleteStatus: 'idle',
+    deleteError: null,
   },
 
   reducers: {
@@ -54,7 +67,10 @@ export const deviceSlice = createSlice({
     },
     setLimit: (state, action) => {
       state.pageLimit = action.payload;
-    }
+    },
+    setDevicesList: (state, action) => {
+      state.deviceList = action.payload;
+    },
   },
 
   extraReducers: (builder) => {
@@ -82,11 +98,24 @@ export const deviceSlice = createSlice({
         .addCase(getDeviceById.rejected, (state, action) => {
         state.statusById = 'failed';
         state.errorById = action.error.message;
-      });  
+      });
+      
+    builder
+        .addCase(deleteDeviceById.pending, (state) => {
+        state.deleteStatus = 'loading';
+      })
+      .addCase(deleteDeviceById.fulfilled, (state) => {
+        state.deleteStatus = 'succeeded';
+      })
+      .addCase(deleteDeviceById.rejected, (state, action) => {
+        state.deleteStatus = 'failed';
+        state.deleteError = action.error.message;
+      }); 
+
     },
 });
 
-export const { setStatusById, setPage, setLimit, setTotalCount } = deviceSlice.actions;
+export const { setStatusById, setPage, setLimit, setTotalCount, setDevicesList } = deviceSlice.actions;
 
 export const selectDeviceById = (state) => state.device.deviceById;
 export const selectDeviceByIdStatus = (state) => state.device.statusById;
@@ -99,5 +128,8 @@ export const selectDeviceError = (state) => state.device.error;
 export const selectDevicePage = (state) => state.device.page;
 export const selectDeviceTotalCount = (state) => state.device.totalCount;
 export const selectDeviceLimit = (state) => state.device.pageLimit;
+
+export const selectDeleteStatus = (state) => state.device.deleteStatus;
+export const selectDeleteError = (state) => state.device.deleteError;
 
 export default deviceSlice.reducer;

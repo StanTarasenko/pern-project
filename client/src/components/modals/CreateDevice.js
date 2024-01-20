@@ -11,6 +11,7 @@ import { PropTypes } from 'prop-types';
 
 // Features
 import { getBrands, selectBrandList } from '../../features/brandSlice';
+import { getDevices } from '../../features/deviceSlice';
 import { getTypes, selectTypeList } from '../../features/typeSlice';
 import { createDevice } from '../../http/deviceApi';
 
@@ -98,6 +99,12 @@ const CreateDevice = ({ show, onHide}) => {
       setNotifyText('New device added to list');
       setIsNotify(true);
       setTimeout(() => {
+        dispatch(getDevices({
+          typeId: null, 
+          brandId: null, 
+          page: null, 
+          limit: null
+        }));
         onHide();
       }, 3000);
     });

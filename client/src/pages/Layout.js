@@ -2,7 +2,7 @@
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { ADMIN_ROUTE, LOGIN_ROUTE, SHOP_ROUTE } from '../utils/constants';
-import { selectIsAuth, setIsAuth, setUser } from '../features/userSlice';
+import { selectIsAuth, selectUser, setIsAuth, setUser } from '../features/userSlice';
 
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
@@ -13,13 +13,20 @@ const Layout = () => {
   const isAuth = useSelector(selectIsAuth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const user = useSelector(selectUser);
+
+  const isUserEmpty = Object.keys(user).length === 0;
 
   const logOut = () => {
     dispatch(setIsAuth(false));
     dispatch(setUser({}));
     localStorage.setItem('token', '');
     navigate(LOGIN_ROUTE);
-}
+  }
+
+  const moveToShop = () => {
+    return navigate(SHOP_ROUTE);
+  };
 
    return (
       <div style={{ 
@@ -46,35 +53,33 @@ const Layout = () => {
               color:"white",
               fontSize: "22px" 
             }} 
-            onClick={() => navigate(SHOP_ROUTE)}>
+            onClick={moveToShop}>
               SHOP
             </NavLink>
-            {isAuth ?
               <Nav className="ml-auto" style={{color: 'black'}}>
-                        <Button
-                          variant={"outline-light"}
-                          onClick={() => navigate(ADMIN_ROUTE)}
-                          style={{ marginRight: "15px" }}
-                        >
-                          Admin panel
-                        </Button>
-                        <Button
-                          variant={"outline-light"}
-                          onClick={() => logOut()}
-                          className="ml-4"
-                        >
-                            Sign out
-                        </Button>
-                    </Nav>
-              : <Nav className="ml-auto">
-                  <Button 
+                {isAuth && <Button
+                  variant={"outline-light"}
+                  onClick={() => navigate(ADMIN_ROUTE)}
+                  style={{ marginRight: "15px" }}
+                >
+                  Admin panel
+                  </Button> }
+                {isUserEmpty
+                  ? <Button 
                     variant={"outline-light"}
                     onClick={() => navigate(LOGIN_ROUTE)} 
                   >
-                      Sign In
+                    Sign In
                   </Button>
-                </Nav>
-            }
+                  : <Button
+                      variant={"outline-light"}
+                      onClick={() => logOut()}
+                      className="ml-4"
+                    >
+                      Sign out
+                    </Button>
+                }
+              </Nav>
             </Nav>
           </Navbar.Collapse>
         </Container>

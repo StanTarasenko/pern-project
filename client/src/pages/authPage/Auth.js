@@ -7,7 +7,7 @@ import { Container, Form, Card, Button } from 'react-bootstrap';
 // Utils
 import { LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from '../../utils/constants';
 import { login, registration } from '../../http/userApi';
-import { setIsAuth, setUser } from '../../features/userSlice';
+import { setUser } from '../../features/userSlice';
 
 const Auth = () => {
   const [email, setEmail] = useState('');
@@ -21,12 +21,12 @@ const Auth = () => {
     try {
       if (pathname === LOGIN_ROUTE) {
         const response = await login(email, password);
-        dispatch(setIsAuth(true));
         dispatch(setUser(response));
         navigate(SHOP_ROUTE);
       }
       if (pathname === REGISTRATION_ROUTE) {
         await registration(email, password);
+        navigate(SHOP_ROUTE);
       }
     } catch (e) {
       alert(e.response.data.message);

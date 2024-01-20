@@ -14,7 +14,7 @@ import { PropTypes } from 'prop-types';
 
 const NotifyTost = ({ show, setShow, text, variant }) => {
   return (
-    <div style={{ position: 'absolute', top: '-25%', right: '0' }}>
+    <div style={{ position: 'absolute', top: '0', right: '0' }}>
       <Toast 
         onClose={() => setShow(false)} 
         show={show} 

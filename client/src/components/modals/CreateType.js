@@ -1,17 +1,24 @@
 // Modules
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { Form } from 'react-bootstrap';
 
 import { PropTypes } from 'prop-types';
-import { Form } from 'react-bootstrap';
 import { createType } from '../../http/typeApi';
+import { getTypes } from '../../features/typeSlice';
 
 const CreateType = ({ show, onHide }) => {
+  const dispatch = useDispatch(); 
   const [typeName, setTypeName] = useState('');
 
   const createNewType = async () => {
     await createType({ name: typeName });
+    setTimeout(() => { 
+      dispatch(getTypes());
+      onHide();
+    }, 0);
   };
 
   return (

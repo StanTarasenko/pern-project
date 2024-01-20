@@ -1,17 +1,25 @@
 // Modules
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Form } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
+// Utils
 import { PropTypes } from 'prop-types';
 import { createBrand } from '../../http/brandApi';
+import { getBrands } from '../../features/brandSlice';
 
 const CreateBrand = ({ show, onHide}) => {
+  const dispatch = useDispatch();
   const [brandName, setBrandName] = useState('');
 
   const createNewBrand = async () => {
-    await createBrand({ name: brandName })
+    await createBrand({ name: brandName });
+    setTimeout(() => { 
+      dispatch(getBrands());
+      onHide();
+    }, 0);
   };
 
   return (
