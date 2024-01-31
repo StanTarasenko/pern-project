@@ -1,6 +1,9 @@
 // Modules
+import { useEffect, useState } from 'react';
 import Toast from 'react-bootstrap/Toast';
-import { PropTypes } from 'prop-types';
+import { useSelector } from 'react-redux';
+import { selectNotifyData } from '../../features/userSlice';
+// import { PropTypes } from 'prop-types';
 
 // Type of variant
 // 'primary'
@@ -12,9 +15,16 @@ import { PropTypes } from 'prop-types';
 // 'light'
 // 'dark'
 
-const NotifyTost = ({ show, setShow, text, variant }) => {
+const NotifyTost = () => {
+  const [show, setShow] = useState(false);
+  const { text, variant } = useSelector(selectNotifyData);
+
+  useEffect(() => {
+    if (text && variant) setShow(true);
+  }, [text, variant]);
+
   return (
-    <div style={{ position: 'absolute', top: '0', right: '0' }}>
+    <div style={{ position: 'fixed', top: '0', left: '0' }}>
       <Toast 
         onClose={() => setShow(false)} 
         show={show} 
@@ -28,7 +38,7 @@ const NotifyTost = ({ show, setShow, text, variant }) => {
             className="rounded"
             alt=""
           />
-          <small className="me-auto">Update Notification</small>
+          <small className="me-auto">Process Notification</small>
         </Toast.Header>
         <Toast.Body style={{ color: 'white' }}>
           <strong>{text}</strong>
@@ -39,10 +49,8 @@ const NotifyTost = ({ show, setShow, text, variant }) => {
 }
 
 NotifyTost.propTypes = {
-  show: PropTypes.bool.isRequired,
-  setShow: PropTypes.func.isRequired,
-  text: PropTypes.string.isRequired,
-  variant: PropTypes.string.isRequired,
+  // text: PropTypes.string.isRequired,
+  // variant: PropTypes.string.isRequired,
 }
 
 export default NotifyTost;

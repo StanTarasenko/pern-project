@@ -15,6 +15,13 @@ export const getTypes = createAsyncThunk(
     }
 });
 
+export const createType = createAsyncThunk(
+  "types/createType", 
+  async (type) => {
+    const response = await $authHost.post('api/type', type);
+    return response.data;
+});
+
 export const deleteType = createAsyncThunk(
   "types/deleteType", 
   async (typeId) => {
@@ -33,6 +40,8 @@ export const typeSlice = createSlice({
     status: 'idle',
     error: null,
     typeId: 0,
+    createStatus: 'idle',
+    createError: null,
     removeStatus: 'idle',
     removeError: null,
   },
@@ -61,6 +70,18 @@ export const typeSlice = createSlice({
       });
 
     builder
+        .addCase(createType.pending, (state) => {
+        state.createStatus = 'loading';
+      })
+        .addCase(createType.fulfilled, (state) => {
+        state.createStatus = 'succeeded';
+      })
+        .addCase(createType.rejected, (state, action) => {
+        state.createStatus = 'failed';
+        state.createError = action.error.message;
+      });
+
+    builder
       .addCase(deleteType.pending, (state) => {
         state.removeStatus = 'loading';
       })
@@ -82,5 +103,7 @@ export const selectTypeStatus = (state) => state.type.status;
 export const selectTypeError = (state) => state.type.error;
 export const selectRemoveTypeStatus = (state) => state.type.removeStatus;
 export const selectRemoveTypeError = (state) => state.type.removeError;
+export const selectCreateTypeStatus = (state) => state.type.createStatus;
+export const selectCreateTypeError = (state) => state.type.createError;
 
 export default typeSlice.reducer;

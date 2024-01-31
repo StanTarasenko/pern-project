@@ -57,7 +57,7 @@ const Shop = () => {
             <Row>
               <BrandBar />
             </Row>
-            <DeviceList devices={ devices } />
+            <DeviceList devices={ devices ? devices : [] } />
             <Row style={{ marginTop: "40px" }}>
               <ShopPagination />
             </Row>

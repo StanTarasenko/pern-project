@@ -14,9 +14,10 @@ import { getBrands, selectBrandList } from '../../features/brandSlice';
 import { getDevices } from '../../features/deviceSlice';
 import { getTypes, selectTypeList } from '../../features/typeSlice';
 import { createDevice } from '../../http/deviceApi';
+import { setNotifyData } from '../../features/userSlice';
 
 // Components
-import NotifyTost from '../notification/NotifyTost';
+// import NotifyTost from '../notification/NotifyTost';
 
 const CreateDevice = ({ show, onHide}) => {
   const dispatch = useDispatch();
@@ -27,10 +28,6 @@ const CreateDevice = ({ show, onHide}) => {
   const [typeId, setTypeId] = useState('');
   const [info, setInfo] = useState([]);
   const [file, setFile] = useState(null);
-
-  const [isNotify, setIsNotify] = useState(false);
-  const [currentVariant, setCurrentVariant] = useState('');
-  const [notifyText, setNotifyText] = useState('');
 
   const brands = useSelector(selectBrandList);
   const types = useSelector(selectTypeList);
@@ -74,16 +71,12 @@ const CreateDevice = ({ show, onHide}) => {
     const formData = new FormData();
 
     if (!name) {
-      setCurrentVariant('danger');
-      setNotifyText('Device name is required');
-      setIsNotify(true);
+      dispatch(setNotifyData({text: 'Device name is required', variant: 'danger'}))
       return;
     }
 
     if (!price) {
-      setCurrentVariant('danger');
-      setNotifyText('Device price is required');
-      setIsNotify(true);
+      dispatch(setNotifyData({text: 'Device price is required', variant: 'danger'}))
       return;
     }
 
@@ -95,9 +88,7 @@ const CreateDevice = ({ show, onHide}) => {
     formData.append('info', JSON.stringify(info))
 
     createDevice(formData).then(() => {
-      setCurrentVariant('success');
-      setNotifyText('New device added to list');
-      setIsNotify(true);
+      dispatch(setNotifyData({text: 'New device added to list', variant: 'success'}))
       setTimeout(() => {
         dispatch(getDevices({
           typeId: null, 
@@ -212,12 +203,10 @@ const CreateDevice = ({ show, onHide}) => {
             </Modal.Footer>
           </Form>
         </Modal.Body>
-        <NotifyTost 
-          show={isNotify} 
-          setShow={setIsNotify}
+        {/* <NotifyTost
           text={notifyText}
           variant={currentVariant} 
-        />
+        /> */}
       </Modal>
     </div>
   );

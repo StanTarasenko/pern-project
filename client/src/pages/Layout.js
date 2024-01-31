@@ -8,6 +8,7 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { Button, NavLink } from 'react-bootstrap';
+import NotifyTost from '../components/notification/NotifyTost';
 
 const Layout = () => {
   const isAuth = useSelector(selectIsAuth);
@@ -82,6 +83,7 @@ const Layout = () => {
               </Nav>
             </Nav>
           </Navbar.Collapse>
+          <NotifyTost />
         </Container>
       </Navbar>
           <div>

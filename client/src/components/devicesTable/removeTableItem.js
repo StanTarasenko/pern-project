@@ -7,6 +7,7 @@ import { PropTypes } from 'prop-types';
 import { deleteBrand, getBrands } from '../../features/brandSlice';
 import { deleteType, getTypes } from '../../features/typeSlice';
 import { deleteDeviceById, getDevices } from '../../features/deviceSlice';
+import { setNotifyData } from '../../features/userSlice';
 
 const RemoveTableItem = ({ id, title }) => {
   const dispatch = useDispatch();
@@ -54,6 +55,7 @@ const RemoveTableItem = ({ id, title }) => {
   useEffect(() => {
     if (isConfirm) {
       handlerRemove();
+      dispatch(setNotifyData({text: 'Item has been deleted', variant: 'success'}))
       setIsConfirm(false);
     }
   }, [isConfirm]);

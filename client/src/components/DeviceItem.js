@@ -38,7 +38,9 @@ const DeviceItem = ({ device }) => {
             }}
           />
         </div>
-        <div style={{ marginTop: "10px" }}>{currentBrand.name}</div>
+        <div style={{ marginTop: "10px" }}>
+          {currentBrand && currentBrand.name}
+        </div>
         <div>{device.name}</div>
         <div>{device.price}</div>
       </Card>

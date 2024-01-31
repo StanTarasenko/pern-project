@@ -12,12 +12,13 @@ const DeviceList = ({ devices }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (!devices) return;
     dispatch(setTotalCount(devices.count));
   }, [dispatch, devices]);
 
   return (
     <Row>
-      {devices.rows 
+      {devices && devices.rows 
         ? devices.rows.map((device) => <DeviceItem key={device.id} device={device ? device : {}} />)
         : <div>No items found</div>
       }  
