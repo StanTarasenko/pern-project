@@ -48,9 +48,9 @@ const NotifyTost = () => {
   );
 }
 
-NotifyTost.propTypes = {
-  // text: PropTypes.string.isRequired,
-  // variant: PropTypes.string.isRequired,
-}
+// NotifyTost.propTypes = {
+//   text: PropTypes.string.isRequired,
+//   variant: PropTypes.string.isRequired,
+// }
 
 export default NotifyTost;

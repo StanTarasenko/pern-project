@@ -19,12 +19,23 @@ export const getBasketById = createAsyncThunk(
   "basketById/getBasketById", 
   async (basketId) => {
     try {
-      const response = await $host.get(`api/baket/${basketId}`);
+      const response = await $host.get(`api/basket/${basketId}`);
       return response.data;
     } catch (error) {
       console.error(error);
     }
 });
+
+export const addDeviceToBasket = createAsyncThunk(
+  "deviceToBasket/addDeviceToBasket",
+  async (devices, basketId) => {
+    try {
+      const { data } = await $host.post(`api/basket/${basketId}`, devices);
+      return data;
+    } catch (error) {
+      console.error(error);
+    }
+  });
 
 export const basketSlice = createSlice({
   name: 'basket',

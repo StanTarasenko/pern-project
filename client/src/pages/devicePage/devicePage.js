@@ -17,6 +17,9 @@ import {
   selectDeviceByIdStatus,
 } from '../../features/deviceSlice';
 
+// Components
+import BasketBtn from '../../components/addToBasketBtn/BasketBtn.tsx';
+
 const DevicePage = () => {
   const dispatch = useDispatch();
   const device = useSelector(selectDeviceById);
@@ -91,6 +94,9 @@ const DevicePage = () => {
             </Col>)}
           </Col>
         </Row>
+        <div style={{ marginTop: "10px", display: "flex", justifyContent: "center" }}>
+          <BasketBtn device={device} />
+        </div>
       </Container>
     </div>
   );
