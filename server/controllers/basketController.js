@@ -47,6 +47,33 @@ class BasketController {
       });
       return res.json(basket);
   }
+
+  async addDevicesToBasket(req, res, next) {
+    try {
+      const { basketId, devices } = req.body;
+      const basket = await Basket.findByPk(basketId);
+
+      if (!basket) {
+        return next(ApiError.badRequest('Basket not found'));
+      }
+
+      if (devices) {
+        const parsedDevices = JSON.parse(devices);
+
+        parsedDevices.forEach(async (device) => {
+          await BasketDevice.create({
+            title: device.name,
+            deviceId: device.id,
+            basketId: basket.id,
+          });
+        });
+      }
+
+      return res.json(basket);
+    } catch (e) {
+      next(ApiError.badRequest(e.message));
+    }
+  }
 }
 
 module.exports = new BasketController();
